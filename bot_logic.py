@@ -3,7 +3,7 @@ import logging
 
 def place_order(client, symbol, side, order_type, quantity, price=None):
     try:
-        # Binance ko quantity aur price hamesha string ya sahi float format mein chahiye
+        # Binance requires quantity and price to always be in string or proper float format
         qty = float(quantity)
         order = None
         
@@ -16,7 +16,7 @@ def place_order(client, symbol, side, order_type, quantity, price=None):
             )
         elif order_type.upper() == 'LIMIT':
             if not price:
-                raise ValueError("LIMIT order ke liye price zaroori hai!")
+                raise ValueError("Price is required for LIMIT orders!")
             
             order = client.futures_create_order(
                 symbol=symbol.upper(),
@@ -33,7 +33,7 @@ def place_order(client, symbol, side, order_type, quantity, price=None):
         return order
 
     except Exception as e:
-        # Ye line tumhe terminal mein exact batayegi ki problem kya hai
+        # This line will show you the exact problem in the terminal
         error_msg = f"API Error: {e}"
         logging.error(error_msg)
         print(error_msg)
